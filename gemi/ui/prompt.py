@@ -83,10 +83,14 @@ def build_bottom_toolbar(
     cost_usd: float = 0.0,
     cache_hits: int = 0,
     cache_total: int = 0,
+    cwd_basename: str = "",
+    model_display: str = "",
 ) -> str:
     """Render the bottom toolbar — clean, minimal status strip.
 
-    Only essentials: agent slug, ready state, context %, optional cost.
+    Order (Claude-Code-style left-to-right): status dot · agent · model ·
+    cwd · mode · ctx% · turn · cost. Earlier truncated when the strip
+    overflows so the most-load-bearing fields stay visible.
     """
     p = get_palette(get_active_theme_name())
     parts = []
@@ -99,6 +103,17 @@ def build_bottom_toolbar(
 
     # Agent slug
     parts.append(_ansi_rgb(p.info, agent_slug))
+
+    # Model display name (compact, dim) — shown after agent slug
+    if model_display:
+        parts.append(_ansi_rgb(p.text_subtle, " "))
+        parts.append(_ansi_rgb(p.text_muted, model_display))
+
+    # Working directory basename — Claude Code shows this so you know
+    # which project the agent will edit. Full path lives in the welcome.
+    if cwd_basename:
+        parts.append(_ansi_rgb(p.text_subtle, " · "))
+        parts.append(_ansi_rgb(p.text_muted, f"⌂ {cwd_basename}"))
 
     # Mode (only if active)
     if mode_label:

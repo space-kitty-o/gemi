@@ -494,8 +494,8 @@ class BuddyApp:
         palette = get_palette(get_active_theme_name())
         running = get_running_agents()
 
-        # Show the splash welcome first
-        print_welcome(self.console)
+        # Show the splash welcome first (now Claude-Code-style with workspace + tip)
+        print_welcome(self.console, workspace=self.workspace)
 
         if running:
             self.console.print(
@@ -722,6 +722,8 @@ class BuddyApp:
                     cost_usd=self.engine._cost.session.total_usd,
                     cache_hits=cache.hits,
                     cache_total=cache.hits + cache.misses,
+                    cwd_basename=self.workspace.name if self.workspace else "",
+                    model_display=getattr(a, "short_model", "") or "",
                 )
             except Exception:
                 return ""

@@ -78,6 +78,19 @@ def print_banner(
             ws.append(f"  ⎇ {branch}", style=f"bold {palette.buddy_shimmer}")
         console.print(ws)
 
+    # Rotating tip — Claude-Code-style. One pulled per session-hour so it
+    # changes session-to-session but stays stable inside a single session.
+    try:
+        from .tips import pick_tip
+        tip = pick_tip()
+        tip_line = Text("  ")
+        tip_line.append("✱ ", style=f"bold {palette.buddy_shimmer}")
+        tip_line.append("Tip: ", style=f"bold {palette.text_muted}")
+        tip_line.append(tip, style="dim")
+        console.print(tip_line)
+    except Exception:
+        pass
+
     hint = Text()
     hint.append("\n  ")
     hint.append("/help", style=f"bold {palette.buddy}")
